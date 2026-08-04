@@ -1,31 +1,30 @@
 import express from 'express';
+import cors from 'cors';
 
 const app = express();
-app.use(express.json())
-const PORT = 3000;
-
-const users=[];
+const PORT = 3004;
+app.use(express.json());
+app.use(cors());
 
 app.post('/cadastro', (req, res)=>{
-    const usuario = req.body.usuario;
-    const email = req.body.email;
+    const {usuario, email} = req.body;
 
-    if (usuario && email) {
-        const novoUsuario = {usuario, email};
-        
-        users.push(novoUsuario);
+    if (!usuario || !email) {
+        res.status(400).json({
+            erro: "Preencha todos os campos"
+        });
+    }
 
+    console.log(`Recebido, aguarde 1 segundo`);
+
+    setTimeout(()=>{
         console.log(`Cadastrado o ${usuario}`);
 
         res.json({
             mensagem: "Cadastrado com Sucesso!!",
             perfil: `Perfil ${usuario} cadastrado com o email ${email}`
         });
-    }
-});
-
-app.get('/', (req, res)=>{
-    res.json(users);
+    }, 1000);
 });
 
 app.listen(PORT, ()=>{
